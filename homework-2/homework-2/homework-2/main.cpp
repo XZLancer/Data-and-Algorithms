@@ -11,8 +11,6 @@ struct Node
 
 	int iRow, iCol, iElem;
 	Node * pNext;
-	//Node * pRowPointer;
-	//Node * pColPointer;
 };
 
 
@@ -22,49 +20,65 @@ public:
 	MatLinkList(){}
 	~MatLinkList();
 	void InitHead(int row, int col, int elem);
-	Node getHead();
+	Node & GetHead();
 	void Sort();
+	void PrintMat();
+	void GetRowInfo(int * pRowInfo, int & iRealRowNum);
 	bool Insert(int pos, int row, int col, int elem);		// insert an element(begin with 0)
 	bool Delete(int pos);
-private:
+protected:
 	Node head;
 };
 
+// Declaration of functions
+void matSum(MatLinkList & matA, MatLinkList & matB);
+void matMul(MatLinkList & matA, int * pRowInfo, int & iRealRowNum);
 
 int main(void)
 {
-	int iRowNum, iColNum, iElemNum, iTemp;		// the number of rows&columns(the same) and elements
+	int iRowNum, iColNum, iElemNum;		// the number of rows&columns(the same) and elements
 	int iRow, iCol, iElem;						// the information of one node;
-	MatLinkList matrix, matrix_T, matrixSum;
+	int * pRowInfo, iRealRowNum;
+	MatLinkList matrix, matrix_T;
+	
 
-	scanf("%d%d%d", &iRowNum, &iColNum, &iTemp);
-	iElemNum = iTemp;
+	scanf("%d%d%d", &iRowNum, &iColNum, &iElemNum);
 
-	for (int i = 0; i < iTemp; i++)			// record the data
+	pRowInfo = new int [iRowNum];
+	
+	// record the data
+	for (int i = 0; i < iElemNum; i++)			
 	{
 		scanf("%d%d%d", &iRow, &iCol, &iElem);
 		if (0 == iElem)			
 		{
-			continue;			// skip if the element is 0
-			iElemNum -= 1;		// reset the number of elements
+			iElemNum--;		// reset i and the number of elements 
+			i--;
+			continue;			// skip if the element is 0	
 		}
 		matrix.Insert(i, iRow, iCol, iElem);
-		matrix_T.Insert(i, iCol, iRow, iElem);		// implementation of transpose
+		matrix_T.Insert(i, iCol, iRow, iElem);		// record of transpose
 	}
 
-	matrix.InitHead(iRowNum, iColNum, iElemNum);	// record the mat info in head
+	// record the mat info in head
+	matrix.InitHead(iRowNum, iColNum, iElemNum);	
 	matrix_T.InitHead(iColNum, iRowNum, iElemNum);
 
 	matrix.Sort();
 	matrix_T.Sort();
 
-	Node * p = &matrix_T.getHead();
-	for (int i = 0; i < matrix.getHead().iElem; i++)
-	{
-		p = p->pNext;
-		printf("%d %d %d\n", p->iRow, p->iCol, p->iElem);
-	}
+	// print the transpose of the matrix
+	matrix_T.PrintMat();
 
+	// get the number of elements in every row
+	matrix.GetRowInfo(pRowInfo, iRealRowNum);
+
+	matSum(matrix, matrix_T);
+
+	matMul(matrix, pRowInfo, iRealRowNum);
+
+	delete [] pRowInfo;
+	pRowInfo = NULL;
 	return 0;
 }
 
@@ -94,7 +108,7 @@ void MatLinkList::InitHead(int row, int col, int elem)
 }
 
 
-Node MatLinkList::getHead()
+Node & MatLinkList::GetHead()
 {
 	return head;
 }
@@ -139,6 +153,54 @@ void MatLinkList::Sort()
 }
 
 
+void MatLinkList::PrintMat()
+{
+	Node * p = &head;
+	for (int i = 0; i < head.iElem; i++)
+	{
+		p = p->pNext;
+		printf("%d %d %d\n", p->iRow, p->iCol, p->iElem);
+	}
+}
+
+
+void MatLinkList::GetRowInfo(int * pRowInfo, int & iRealRowNum)
+{
+	Node * p = &head;
+	int temp = 1, j = 0;
+
+	for (int i = 0; i < (head.iElem - 1); i++)
+	{
+		p = p->pNext;
+		if (p->iRow == p->pNext->iRow)
+		{
+			temp++;
+			if (i != head.iElem - 2)
+			{
+				continue;
+			}	
+		}
+		else if (i == head.iElem - 2)
+		{
+			pRowInfo[j + 1] = 1;
+			iRealRowNum = j + 2;
+		}
+		pRowInfo[j] = temp;
+		j++;
+		temp = 1;
+	}
+	if (head.iElem == 1 && j == 0)		// if there is only one element(nonzero)
+	{
+		pRowInfo[0] = 1;
+		iRealRowNum = 1;
+	}
+	else
+	{
+		iRealRowNum = (iRealRowNum == j + 1) ? (j + 1) : j;
+	}
+}
+
+
 bool MatLinkList::Insert(int pos, int row, int col, int elem)
 {
 	Node * insNode, * p = &head;
@@ -154,6 +216,7 @@ bool MatLinkList::Insert(int pos, int row, int col, int elem)
 	insNode->init(row, col, elem);
 	insNode->pNext = p->pNext;
 	p->pNext = insNode;
+
 	return true;
 }
 
@@ -177,29 +240,112 @@ bool MatLinkList::Delete(int pos)
 }
 
 
-void matSum(MatLinkList matA, MatLinkList matB, MatLinkList matC)
+void matSum(MatLinkList & matA, MatLinkList & matB)
 {
-	Node * pMatA = &matA.getHead(), * pMatB = &matB.getHead();
-	for (int i = 0; i < matA.getHead().iElem; i++)
+	Node * pMatB = &matB.GetHead(), * pMatA = matA.GetHead().pNext;
+
+	while (pMatA != NULL && pMatB != NULL)		// if pMatA and pMatB do not point to the list tail
 	{
-		// pMatA
-		pMatA = pMatA->pNext;
-		for (int j = 0; j < matB.getHead().iElem; j++)
+		pMatB = pMatB->pNext;
+		while (pMatA != NULL && pMatB != NULL)
 		{
-			pMatB = pMatB->pNext;
-			if(pMatA->iRow == pMatB->iRow && pMatA->iCol == pMatB->iCol)
+			if (pMatB->iRow < pMatA->iRow)
 			{
-				matC.Insert(i, pMatA->iRow, pMatA->iCol, pMatA->iElem+pMatB->iElem);
+				printf("%d %d %d\n", pMatB->iRow, pMatB->iCol, pMatB->iElem);
+				break;		// if print the element in matB, pMatB points to the next
 			}
-
+			else if (pMatB->iRow > pMatA->iRow)
+			{
+				printf("%d %d %d\n", pMatA->iRow, pMatA->iCol, pMatA->iElem);
+				pMatA = pMatA->pNext;		// if print the element in matA, pMatA points to the next
+			}
+			else
+			{
+				if (pMatB->iCol < pMatA->iCol)
+				{
+					printf("%d %d %d\n", pMatB->iRow, pMatB->iCol, pMatB->iElem);
+					break;
+				}
+				else if (pMatB->iCol > pMatA->iCol)
+				{
+					printf("%d %d %d\n", pMatA->iRow, pMatA->iCol, pMatA->iElem);
+					pMatA = pMatA->pNext;
+				}
+				else
+				{
+					if (pMatB->iElem + pMatA->iElem != 0)
+					{
+						printf("%d %d %d\n", pMatA->iRow, pMatA->iCol, pMatB->iElem + pMatA->iElem);
+					}
+					pMatA = pMatA->pNext;		// if make an addition, pMatA and pMatB
+					pMatB = pMatB->pNext;		// both point to the next
+				}
+			}
 		}
+	}
 
+	// ether pMatA of pMatB points to the list tail
+	// print the rest of the elements
+	while (pMatA != NULL)
+	{
+		printf("%d %d %d\n", pMatA->iRow, pMatA->iCol, pMatA->iElem);
+		pMatA = pMatA->pNext;
+	}
+	while (pMatB != NULL)
+	{
+		printf("%d %d %d\n", pMatB->iRow, pMatB->iCol, pMatB->iElem);
+		pMatB = pMatB->pNext;
 	}
 }
 
 
-void matMul(MatLinkList matA, MatLinkList matB)
+void matMul(MatLinkList & matA, int * pRowInfo, int & iRealRowNum)
 {
+	Node * pRow = &matA.GetHead(), * pCol;
+	Node * pRowHead, * pColHead;
 
+	int sum, k, l, m;
+	for (int row = 0; row < iRealRowNum; row++)
+	{
+		l = 0;
+		pCol = &matA.GetHead();
+		while (row != 0 && l < pRowInfo[row - 1])
+		{
+			pRow = pRow->pNext;
+			l++;
+		}
+		pRowHead = pRow;		// record the head in every row;
+		for (int col = 0; col < iRealRowNum; col++)
+		{
+			sum = 0;
+			m = 0;
+
+			// move pCol to No.col column's head
+			while (col != 0 && m < pRowInfo[col - 1])
+			{
+				pCol = pCol->pNext;
+				m++;
+			}
+			pColHead = pCol;		// record the head in every colomn
+			for (k = 0; k < pRowInfo[row]; k++)
+			{
+				pRow = pRow->pNext;
+				for (int j = 0; j < pRowInfo[col]; j++)
+				{
+					pCol = pCol->pNext;
+					if (pCol->iCol == pRow->iCol)
+					{
+						sum += pRow->iElem * pCol->iElem;
+						break;
+					}
+				}
+				pCol = pColHead;	// reset pCol
+			}
+			if (sum != 0)
+			{
+				printf("%d %d %d\n", pRowHead->pNext->iRow, pColHead->pNext->iRow, sum);
+			}
+			pRow = pRowHead;		// reset pRow
+		}
+	}
 }
-
