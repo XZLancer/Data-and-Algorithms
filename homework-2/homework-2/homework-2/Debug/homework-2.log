@@ -1,13 +1,20 @@
-﻿生成启动时间为 2017/10/19 0:52:33。
-     1>项目“G:\Study files in university\Course homework\2nd grade\Data and Algorithms\homework-2\homework-2\homework-2\homework-2.vcxproj”在节点 2 上(Build 个目标)。
+﻿生成启动时间为 2017/10/21 10:03:27。
+     1>项目“G:\Study files in university\Course homework\2nd grade\Data and Algorithms\homework-2\homework-2\homework-2\homework-2.vcxproj”在节点 2 上(Rebuild 个目标)。
      1>ClCompile:
          D:\软件\VS2012\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc110.pdb" /Gd /TP /analyze- /errorReport:prompt main.cpp
          main.cpp
-       Link:
-         D:\软件\VS2012\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"G:\Study files in university\Course homework\2nd grade\Data and Algorithms\homework-2\homework-2\Debug\homework-2.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"G:\Study files in university\Course homework\2nd grade\Data and Algorithms\homework-2\homework-2\Debug\homework-2.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"G:\Study files in university\Course homework\2nd grade\Data and Algorithms\homework-2\homework-2\Debug\homework-2.lib" /MACHINE:X86 Debug\main.obj
-         homework-2.vcxproj -> G:\Study files in university\Course homework\2nd grade\Data and Algorithms\homework-2\homework-2\Debug\homework-2.exe
-     1>已完成生成项目“G:\Study files in university\Course homework\2nd grade\Data and Algorithms\homework-2\homework-2\homework-2\homework-2.vcxproj”(Build 个目标)的操作。
+     1>g:\study files in university\course homework\2nd grade\data and algorithms\homework-2\homework-2\homework-2\main.cpp(418): error C2065: “LinkList”: 未声明的标识符
+     1>g:\study files in university\course homework\2nd grade\data and algorithms\homework-2\homework-2\homework-2\main.cpp(418): error C2065: “HA”: 未声明的标识符
+     1>g:\study files in university\course homework\2nd grade\data and algorithms\homework-2\homework-2\homework-2\main.cpp(418): error C2065: “HB”: 未声明的标识符
+     1>g:\study files in university\course homework\2nd grade\data and algorithms\homework-2\homework-2\homework-2\main.cpp(418): error C2065: “HC”: 未声明的标识符
+     1>g:\study files in university\course homework\2nd grade\data and algorithms\homework-2\homework-2\homework-2\main.cpp(418): error C2448: “mergeList”: 函数样式初始值设定项类似函数定义
+     1>g:\study files in university\course homework\2nd grade\data and algorithms\homework-2\homework-2\homework-2\main.cpp(455): error C2065: “LinkList”: 未声明的标识符
+     1>g:\study files in university\course homework\2nd grade\data and algorithms\homework-2\homework-2\homework-2\main.cpp(455): error C2065: “HA”: 未声明的标识符
+     1>g:\study files in university\course homework\2nd grade\data and algorithms\homework-2\homework-2\homework-2\main.cpp(455): error C2065: “HB”: 未声明的标识符
+     1>g:\study files in university\course homework\2nd grade\data and algorithms\homework-2\homework-2\homework-2\main.cpp(455): error C2065: “HC”: 未声明的标识符
+     1>g:\study files in university\course homework\2nd grade\data and algorithms\homework-2\homework-2\homework-2\main.cpp(456): error C2448: “mergeList”: 函数样式初始值设定项类似函数定义
+     1>已完成生成项目“G:\Study files in university\Course homework\2nd grade\Data and Algorithms\homework-2\homework-2\homework-2\homework-2.vcxproj”(Rebuild 个目标)的操作 - 失败。
 
-生成成功。
+生成失败。
 
-已用时间 00:00:00.37
+已用时间 00:00:01.18

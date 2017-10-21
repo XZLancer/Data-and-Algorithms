@@ -52,7 +52,7 @@ int main(void)
 		scanf("%d%d%d", &iRow, &iCol, &iElem);
 		if (0 == iElem)			
 		{
-			iElemNum--;		// reset i and the number of elements 
+			iElemNum--;			// reset i and the number of elements 
 			i--;
 			continue;			// skip if the element is 0	
 		}
@@ -348,4 +348,61 @@ void matMul(MatLinkList & matA, int * pRowInfo, int & iRealRowNum)
 			pRow = pRowHead;		// reset pRow
 		}
 	}
+}
+
+
+void matMul(MatLinkList & matA, MatLinkList & matB, int & iRealRowNum)
+{
+	Node * pMatA = matA.GetHead().pNext, * pMatB;
+	Node * pRowHead = pMatA, * pColHead;
+	int sum;
+
+	for (int i = 0; i < iRealRowNum; i++)
+	{
+		while (pMatA->iRow == pRowHead->iRow)
+		{
+			pMatA = pMatA->pNext;
+		}
+		pRowHead = pMatA;		// record the head in every row
+		pMatB= matB.GetHead().pNext;
+
+		for (int i = 0; i < iRealRowNum; i++)
+		{
+			sum = 0;
+			pMatA = pRowHead;
+			while (pMatB->iRow == pColHead->iRow)
+			{
+				pMatB = pMatB->pNext;
+			}
+			pColHead = pMatB;		// record the head in every column
+			while (pMatA != NULL)
+			{
+				if (pMatA->iRow != pRowHead->iRow)
+				{
+					printf("%d %d %d", pRowHead->iRow, pColHead->iRow, sum);
+					break;
+				}
+				while (pMatA != NULL && pMatB != NULL)
+				{
+					if (pMatA->iCol < pMatB->iCol)
+					{
+						break;		// pMatA points to the next
+					}
+					else if (pMatA->iCol > pMatB->iCol)
+					{
+						pMatB = pMatB->pNext;
+					}
+					else
+					{
+						sum += pMatA->iElem * pMatB->iElem;
+						pMatB = pMatB->pNext;
+						break;		// pMatA points to the next
+					}
+				}
+				pMatA = pMatA->pNext;
+			}
+		}
+	}
+	
+	
 }
